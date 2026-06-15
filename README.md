@@ -23,16 +23,16 @@ This is your project home for the FURP programme. **Fork this template**, rename
 
 ## Project Info — *fill this in*
 
-| Field | Your entry |
-|---|---|
-| Student name(s) | _e.g. Jason Zhang_ |
-| Project title | _..._ |
-| Project tag | _e.g. ROSBootcamp_ |
-| Track | Research |
-| Supervising faculty | _..._ |
-| Project lead | _..._ |
-| Team or individual | _..._ |
-| Cited paper being replicated | _title + link/DOI_ |
+| Field                        | Your entry                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------------- |
+| Student name(s)              | _Zifan Xu_                                                                 |
+| Project title                | Whole-Body Control for a Mobile Manipulator with QP + Reinforcement Learning |
+| Project tag                  | _ROSBootcamp_                                                              |
+| Track                        | Research                                                                     |
+| Supervising faculty          | Chiew-Foong Kwong                                                            |
+| Project lead                 | Fuhua Jia                                                                    |
+| Team or individual           | _..._                                                                      |
+| Cited paper being replicated | _title + link/DOI_                                                         |
 
 **One-line summary:** _What is your project about? (1–2 sentences)_
 
