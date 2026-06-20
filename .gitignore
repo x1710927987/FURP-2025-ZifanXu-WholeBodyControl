@@ -1,6 +1,11 @@
 # Personal files
 .local/
 
+# Colcon compile files
+src/ros2_learning/build/
+src/ros2_learning/install/
+src/ros2_learning/log/
+
 # Python
 __pycache__/
 *.py[cod]
