@@ -33,7 +33,28 @@
 
 <!-- =================  YOUR ENTRIES BELOW  ================= -->
 
-### Week 1 — 2026-06-15
+### Week 1 — 2026-06-22
+
+**Attended this week's meeting:** Yes
+
+**Progress this week**
+
+- Relearnt the basic knowledges of ROS2 (including installation, topic, launch etc.)
+- Typed all the codes from [MOGI-ROS/Week-1-2-Introduction-to-ROS2: Introduction to ROS2 Jazzy basics](https://github.com/MOGI-ROS/Week-1-2-Introduction-to-ROS2/tree/main) manually (see ./src/ros2_learning)
+
+**Challenges & blockers**
+
+- All challenges are solved with the help of AI
+
+**Next steps**
+
+- Continue to learn other communication methods of ROS2
+
+**Hours spent (optional):** approximately 6h
+
+**Links (optional):** [MOGI-ROS/Week-1-2-Introduction-to-ROS2: Introduction to ROS2 Jazzy basics](https://github.com/MOGI-ROS/Week-1-2-Introduction-to-ROS2/tree/main)
+
+### Week 0 — 2026-06-15
 
 **Attended this week's meeting:** Yes
 
