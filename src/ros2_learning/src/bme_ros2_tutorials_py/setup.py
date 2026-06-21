@@ -13,7 +13,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='zifan',
+    maintainer='Zifan',
     maintainer_email='zifanxu368@gmail.com',
     description='Practicing ROS2 with Python',
     license='MIT',
@@ -26,7 +26,9 @@ setup(
         'console_scripts': [
             "hello_world_py = bme_ros2_tutorials_py.hello_world:main",
             "publisher_py = bme_ros2_tutorials_py.publisher:main",
-            "oop_publisher_py = bme_ros2_tutorials_py.oop_publisher:main"
+            "oop_publisher_py = bme_ros2_tutorials_py.oop_publisher:main",
+            "subscriber_py = bme_ros2_tutorials_py.subscriber:main",
+            "oop_subscriber_py = bme_ros2_tutorials_py.oop_subscriber:main"
         ],
     },
 )
