@@ -1,6 +1,10 @@
 # Personal files
 .local/
 
+# MOGI starter (clone locally; see src/gazebo_basics/README.md)
+src/gazebo_basics/Week-3-4-Gazebo-basics/
+
+
 # Colcon compile files
 src/ros2_learning/build/
 src/ros2_learning/install/
