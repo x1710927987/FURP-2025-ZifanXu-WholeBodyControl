@@ -33,6 +33,37 @@
 
 <!-- =================  YOUR ENTRIES BELOW  ================= -->
 
+### Week 2 — 2026-06-26
+
+**Attended this week's meeting:** Yes
+
+**Progress this week**
+
+- Set up `~/ros2_ws` with `panda_gz_moveit2` (jazzy) + `pymoveit2`; patched `mock_components` for Jazzy
+- Verified joint-space and Cartesian end-effector motion via pymoveit2 on Panda fake control
+- Added [`src/moveit_ee_tutorial/`](../src/moveit_ee_tutorial/) (README + `move_to_pose.py` wrapper)
+- Added WSL helper scripts under [`scripts/`](../scripts/) (`wsl_launch_fake_control.sh`, `wsl_run_ee_tests.sh`, etc.)
+- Verified collision-aware planning: `ex_collision_primitive.py` adds obstacle sphere; EE pose replanned
+- Cloned MOGI Week 3-4 starter to `src/gazebo_basics/Week-3-4-Gazebo-basics` (local)
+- Read `.local/hoppertrex_isaaclab` (mobile-base RL only; not EE planning) and SEP Phase 1 roadmap
+
+**Challenges & blockers**
+
+- Jazzy spawner race: launch spawners often fail unless delayed respawn (`wsl_launch_fake_control.sh`)
+- Gripper controller sometimes fails to configure; arm trajectory works
+- Run `ros2 run` from **WSL terminal**, not PowerShell (quote truncation)
+
+**Next steps**
+
+- Complete MOGI Week 3-4 URDF/Gazebo exercises (clone starter package)
+- Practice collision-aware planning (`ex_collision_primitive.py`)
+- Re-test `ex_gz_control` + pose goals in Gazebo
+- Obtain lab dual-arm URDF when available
+
+**Hours spent (optional):** approximately 10h
+
+**Links (optional):** [`src/moveit_ee_tutorial/README.md`](../src/moveit_ee_tutorial/README.md), [`scripts/wsl_setup_moveit.sh`](../scripts/wsl_setup_moveit.sh)
+
 ### Week 1 — 2026-06-22
 
 **Attended this week's meeting:** Yes
