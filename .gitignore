@@ -6,6 +6,9 @@ src/gazebo_basics/Week-3-4-Gazebo-basics/
 
 
 # Colcon compile files
+build/
+install/
+log/
 src/ros2_learning/build/
 src/ros2_learning/install/
 src/ros2_learning/log/
@@ -22,7 +25,6 @@ env/
 # Node
 node_modules/
 dist/
-build/
 
 # OS / editor
 .DS_Store
