@@ -1,0 +1,17 @@
+# ROS 2 action snapshot — fake control + pose goal
+# Captured: 2026-06-28
+# Method: derived from pymoveit2/moveit2.py + panda_moveit_config/moveit_controller_manager.yaml
+#
+# Re-capture when stack is running:
+#   ros2 action list -t > docs/figures/week2_ros_actions_live.txt
+
+# pymoveit2 default path (use_move_group_action=False):
+/plan_kinematic_path  # Service, not action — moveit_msgs/srv/GetMotionPlan
+/execute_trajectory [moveit_msgs/action/ExecuteTrajectory]
+
+# move_group internal execution (MoveItSimpleControllerManager):
+/joint_trajectory_controller/follow_joint_trajectory [control_msgs/action/FollowJointTrajectory]
+/gripper_trajectory_controller/follow_joint_trajectory [control_msgs/action/FollowJointTrajectory]
+
+# Alternative single-step path (use_move_group_action=True, not used by default ex_pose_goal):
+/move_action [moveit_msgs/action/MoveGroup]

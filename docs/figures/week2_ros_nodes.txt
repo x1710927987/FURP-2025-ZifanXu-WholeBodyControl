@@ -1,0 +1,16 @@
+# ROS 2 node snapshot — fake control + pose goal
+# Captured: 2026-06-28
+# Method: interface names derived from panda_gz_moveit2 launch + pymoveit2 source
+#         (live `ros2 node list` unavailable: moveit_ros_move_group not installed in WSL apt)
+#
+# Re-capture when stack is running:
+#   bash scripts/wsl_launch_fake_control.sh
+#   ros2 node list > docs/figures/week2_ros_nodes_live.txt
+
+/controller_manager
+/move_group
+/robot_state_publisher
+/rviz2
+
+# When running pose test (Terminal 2):
+/ex_pose_goal

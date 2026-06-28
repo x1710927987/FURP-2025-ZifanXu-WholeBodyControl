@@ -1,0 +1,21 @@
+# ROS 2 topic snapshot — fake control + pose goal
+# Captured: 2026-06-28
+# Method: derived from pymoveit2 + panda_gz_moveit2 source (see moveit_pose_dataflow.md)
+#
+# Re-capture when stack is running:
+#   ros2 topic list -t > docs/figures/week2_ros_topics_live.txt
+
+/joint_states [sensor_msgs/msg/JointState]
+/robot_description [std_msgs/msg/String]
+/tf [tf2_msgs/msg/TFMessage]
+/tf_static [tf2_msgs/msg/TFMessage]
+/trajectory_execution_event [std_msgs/msg/String]
+/collision_object [moveit_msgs/msg/CollisionObject]
+/attached_collision_object [moveit_msgs/msg/AttachedCollisionObject]
+/parameter_events [rcl_interfaces/msg/ParameterEvent]
+/rosout [rcl_interfaces/msg/Log]
+
+# MoveIt / RViz display topics (subset, visible in RViz):
+/planning_scene [moveit_msgs/msg/PlanningScene]
+/monitored_planning_scene [moveit_msgs/msg/PlanningScene]
+/display_planned_path [moveit_msgs/msg/DisplayTrajectory]

@@ -46,6 +46,7 @@
 - Verified collision-aware planning: `ex_collision_primitive.py` adds obstacle sphere; EE pose replanned
 - Cloned MOGI Week 3-4 starter to `src/gazebo_basics/Week-3-4-Gazebo-basics` (local)
 - Read `.local/hoppertrex_isaaclab` (mobile-base RL only; not EE planning) and SEP Phase 1 roadmap
+- Drew MoveIt fake-control data-flow diagram for end-effector pose goals: nodes, ROS message/action types, and data directions — see [`docs/moveit_pose_dataflow.md`](moveit_pose_dataflow.md) (with CLI snapshots in [`docs/figures/`](figures/))
 
 **Challenges & blockers**
 
@@ -62,7 +63,7 @@
 
 **Hours spent (optional):** approximately 10h
 
-**Links (optional):** [`src/moveit_ee_tutorial/README.md`](../src/moveit_ee_tutorial/README.md), [`scripts/wsl_setup_moveit.sh`](../scripts/wsl_setup_moveit.sh)
+**Links (optional):** [`docs/moveit_pose_dataflow.md`](moveit_pose_dataflow.md), [`src/moveit_ee_tutorial/README.md`](../src/moveit_ee_tutorial/README.md), [`scripts/wsl_setup_moveit.sh`](../scripts/wsl_setup_moveit.sh)
 
 ### Week 1 — 2026-06-22
 
