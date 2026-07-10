@@ -1,0 +1,31 @@
+Images scanned: 25
+Valid images: 25
+RMS reprojection error: 0.4442 px
+Output: /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/calibration/berxel/intrinsics.yaml
+
+Per-image results:
+OK   img_001.jpg
+OK   img_002.jpg
+OK   img_003.jpg
+OK   img_004.jpg
+OK   img_005.jpg
+OK   img_006.jpg
+OK   img_007.jpg
+OK   img_008.jpg
+OK   img_009.jpg
+OK   img_010.jpg
+OK   img_011.jpg
+OK   img_012.jpg
+OK   img_013.jpg
+OK   img_014.jpg
+OK   img_015.jpg
+OK   img_016.jpg
+OK   img_017.jpg
+OK   img_018.jpg
+OK   img_019.jpg
+OK   img_020.jpg
+OK   img_021.jpg
+OK   img_022.jpg
+OK   img_023.jpg
+OK   img_024.jpg
+OK   img_025.jpg
