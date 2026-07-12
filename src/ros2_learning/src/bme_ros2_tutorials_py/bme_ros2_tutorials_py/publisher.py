@@ -5,9 +5,9 @@ import time
 import rclpy
 from std_msgs.msg import String
 
-def main(args = None):
+def main(args=None):
     """Initialize and spin the ROS2 publisher node."""
-    rclpy.init(args = args)
+    rclpy.init(args=args)
     node = rclpy.create_node("python_publisher")
     publisher = node.create_publisher(String, "topic", 10)
     msg = String()

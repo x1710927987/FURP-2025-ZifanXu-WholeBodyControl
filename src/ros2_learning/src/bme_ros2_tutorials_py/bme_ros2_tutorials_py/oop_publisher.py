@@ -14,10 +14,12 @@ class MyPublisherNode(Node):
         self.publisher_ = self.create_publisher(String, "oop_topic", 10)
         self.timer = self.create_timer(0.5, self.timer_callback)
         self.get_logger().info("Publisher OOP has been started.")
+        self.declare_parameter("published_text", "Hello world")
+        self.text_ = self.get_parameter("published_text").value
 
     def timer_callback(self):
         """Publish a message and increment the counter."""
-        self.msg.data = f"Hello World: {self.i}"
+        self.msg.data = f"{self.text_}: {self.i}"
         self.publisher_.publish(self.msg)
         self.get_logger().info(f"Publishing: \"{self.msg.data}\"")
         self.i += 1

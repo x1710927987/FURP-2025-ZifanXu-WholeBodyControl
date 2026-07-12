@@ -8,14 +8,14 @@ from std_msgs.msg import String
 class MySubscriberNode(Node):
     """A ROS2 node that subscribe String messages periodically."""
     def __init__(self):
-        super().__init__("python_subscriber_oop")
+        super().__init__("oop_python_subscriber")
         self.create_subscription(String, "oop_topic", self.subscriber_callback, 10)
         self.get_logger().info("OOP subscriber started.")
-        
+
     def subscriber_callback(self, msg: String):
-        """Callback function for OOP subscriber"""
+        """Callback function for OOP subscriber."""
         self.get_logger().info(f"I heard: {msg.data}")
-        
+
 def main(args = None):
     """Initialize and spin the ROS2 subscriber node."""
     rclpy.init(args = args)
@@ -27,6 +27,6 @@ def main(args = None):
     finally:
         node.destroy_node()
         rclpy.shutdown()
-        
+
 if __name__ == "__main__":
     main()

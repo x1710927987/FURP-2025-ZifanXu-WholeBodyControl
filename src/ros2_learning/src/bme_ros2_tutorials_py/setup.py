@@ -28,7 +28,9 @@ setup(
             "publisher_py = bme_ros2_tutorials_py.publisher:main",
             "oop_publisher_py = bme_ros2_tutorials_py.oop_publisher:main",
             "subscriber_py = bme_ros2_tutorials_py.subscriber:main",
-            "oop_subscriber_py = bme_ros2_tutorials_py.oop_subscriber:main"
+            "oop_subscriber_py = bme_ros2_tutorials_py.oop_subscriber:main",
+            'service_server_py = bme_ros2_tutorials_py.service_server:main',
+            'service_client_py = bme_ros2_tutorials_py.service_client:main'
         ],
     },
 )
