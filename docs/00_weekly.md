@@ -33,6 +33,63 @@
 
 <!-- =================  YOUR ENTRIES BELOW  ================= -->
 
+### Week 4 — 2026-07-10
+
+**Attended this week's meeting:** Yes
+
+**Progress this week**
+
+- Set up **RoArm-M3** on dedicated WSL distro `RoArm_M3` (Humble): USB attach via [`scripts/roarm_attach_usb.ps1`](../scripts/roarm_attach_usb.ps1), driver, RViz display, MoveIt2, Servo keyboard control, command-control services, and MTC demos (`cartesian` / `pick_place`)
+- Completed **Berxel iHawk100Q RGB intrinsic calibration**: 25 checkerboard images (8×6, 25 mm), RMS reprojection **0.44 px** — see [`calibration/berxel/`](../calibration/berxel/) and scripts B1–B3 in [`scripts/README.md`](../scripts/README.md)
+- Added Berxel camera USB attach, preview, snapshot, and OpenCV calibration scripts under [`scripts/berxel_*`](../scripts/)
+- Started **Eye-to-Hand hand-eye calibration** (AprilTag on arm, fixed camera): collected 20 pose–image pairs into [`calibration/hand_eye/samples/`](../calibration/hand_eye/samples/); solve step needs debugging (residuals far above target — likely Tag size mm vs m or frame convention)
+- Verified RoArm TF tree (`base_link`, `hand_tcp`, `ihawk_color_optical_frame`) via `view_frames` (see `.local/Archive/frames_2026-07-10_15.14.29.pdf`)
+- Pushed commit `4ba2db6` — Berxel calibration + RoArm-M3 WSL helpers
+
+**Challenges & blockers**
+
+- Hand-eye solve not yet passing acceptance (target: trans < 5 mm, rot < 1°); need to confirm physical AprilTag edge length (6 mm vs 60 mm) and `T_base_cam` convention
+- RoArm and Berxel camera run in **two separate WSL distros** (`RoArm_M3` + `Ubuntu-24.04`); cross-distro pose sampling adds integration complexity
+- Mechanical arm may move on USB connect — keep workspace clear
+
+**Next steps**
+
+- Fix hand-eye calibration (re-collect with correct `--tag-size`, re-run solve)
+- Commit hand-eye scripts and document B4 workflow in `scripts/README.md`
+- Run RoArm MTC `pick_place` end-to-end on hardware
+- Pipe calibrated camera extrinsics into object pose → MoveIt grasp pipeline
+
+**Hours spent (optional):** approximately 12h
+
+**Links (optional):** [`calibration/berxel/README.md`](../calibration/berxel/README.md), [`calibration/hand_eye/README.md`](../calibration/hand_eye/README.md), [`scripts/README.md`](../scripts/README.md) (RoArm R1–R6, Berxel B1–B4), commit `4ba2db6`
+
+### Week 3 — 2026-07-03
+
+**Attended this week's meeting:** Yes
+
+**Progress this week**
+
+- Continued MOGI / ROS 2 communication learning: implemented **Service** client–server pattern in WSL clone `~/FURP-2025-ZifanXu-WholeBodyControl`
+- Added interface package `bme_ros2_tutorials_interfaces` with `CustomCalc.srv` (`a`, `b` → `sum`)
+- Wrote `service_server.py` and `service_client.py` under `src/ros2_learning/`; updated `package.xml`, `setup.py`, and publisher/subscriber launch files (local WSL workspace, not yet pushed to GitHub)
+- Reviewed SEP Phase 1 checklist and ROS2 bootcamp material on **topic / service / action** selection and TF2 sensor frames (prep for camera + arm integration)
+- Pushed Week 2 data-flow diagram to remote (`ebda48f` — [`docs/moveit_pose_dataflow.md`](moveit_pose_dataflow.md))
+
+**Challenges & blockers**
+
+- Service tutorial code lives only in WSL home clone; need to sync to `D:` repo and commit
+- `colcon build` for new interfaces package requires rebuilding dependent `bme_ros2_tutorials_py`
+
+**Next steps**
+
+- Commit and push ROS 2 service tutorial code to GitHub
+- Begin hardware setup: RoArm-M3 USB + Berxel camera via usbipd
+- Complete camera intrinsic calibration before hand-eye work
+
+**Hours spent (optional):** approximately 8h
+
+**Links (optional):** [`docs/moveit_pose_dataflow.md`](moveit_pose_dataflow.md), WSL workspace `~/FURP-2025-ZifanXu-WholeBodyControl/src/ros2_learning/`, commit `ebda48f`
+
 ### Week 2 — 2026-06-26
 
 **Attended this week's meeting:** Yes
