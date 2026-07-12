@@ -165,6 +165,8 @@ bash scripts/wsl_run_ee_tests.sh
 | `berxel_snapshot.sh` | 单帧测试截图 | 1 | 相机已 attach |
 | `berxel_calib_collect.sh` | 采集棋盘格标定图 | 1 | 相机已 attach |
 | `berxel_calib_run.sh` | 计算相机内参 | 1 | 已采集图像 |
+| `berxel_handeye_collect.sh` | AprilTag 手眼采样 | 1 | 相机 + RoArm 已启动 |
+| `berxel_handeye_solve.sh` | 手眼标定解算 | 1 | 已采集 hand_eye 样本 |
 
 ---
 
@@ -424,6 +426,64 @@ bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyContro
 | `berxel_snapshot.sh` | 单帧测试截图 |
 | `berxel_calib_collect.py` / `.sh` | 交互采集棋盘格图像 |
 | `berxel_calib_run.py` / `.sh` | OpenCV 棋盘格内参标定 |
+
+### 场景 B4：AprilTag Eye-to-Hand 手眼标定
+
+**配置：** 相机固定桌面，AprilTag `DICT_APRILTAG_36h11` ID=0 刚性安装在机械臂末端。默认 Tag 边长 **6 mm**（`--tag-size 0.006`）；若实测为 60 mm 则用 `--tag-size 0.06`。
+
+**前置：** 已完成 B3 内参标定；RoArm 与相机分别在 `RoArm_M3` / `Ubuntu-24.04` WSL。
+
+**管理员 PowerShell（每次开机）：**
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/berxel_attach_camera.ps1
+powershell -ExecutionPolicy Bypass -File scripts/roarm_attach_usb.ps1
+```
+
+**终端 1 — RoArm_M3 驱动：**
+
+```bash
+wsl -d RoArm_M3
+bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/roarm_launch_driver.sh
+```
+
+**终端 2 — RoArm_M3 位姿服务：**
+
+```bash
+wsl -d RoArm_M3
+bash .../scripts/roarm_launch_command_control.sh
+ros2 service call /get_pose_cmd roarm_msgs/srv/GetPoseCmd
+```
+
+**终端 3 — Ubuntu-24.04 采集（移动机械臂，相机不动，S 保存，目标 15~20 组）：**
+
+```bash
+wsl -d Ubuntu-24.04
+bash .../scripts/berxel_handeye_collect.sh --tag-size 0.006
+```
+
+**解算：**
+
+```bash
+wsl -d Ubuntu-24.04
+bash .../scripts/berxel_handeye_solve.sh
+```
+
+输出：
+
+| 文件 | 内容 |
+|------|------|
+| `calibration/hand_eye/extrinsics.yaml` | `T_base_cam` |
+| `calibration/hand_eye/hand_eye_report.txt` | 残差 + `static_transform_publisher` 命令 |
+| `calibration/hand_eye/samples/` | 样本图像与 JSON |
+
+验收：样本 ≥ 15，平均残差平移 < 5 mm、旋转 < 1°。标定期间**不可移动相机**。
+
+| 脚本 | 作用 |
+|------|------|
+| `berxel_handeye_collect.py` / `.sh` | 跨 WSL 读 pose + AprilTag 采样 |
+| `berxel_handeye_solve.py` / `.sh` | OpenCV `calibrateHandEye` 解算 |
+| `berxel_handeye_common.py` | 公共变换 / AprilTag / RoArm 调用 |
 
 ---
 

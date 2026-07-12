@@ -1,0 +1,30 @@
+Samples used: 20
+Method: CALIB_HAND_EYE_TSAI
+Mean residual translation: 650522059802590592.000 mm
+Mean residual rotation: 164.875 deg
+Output: /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/calibration/hand_eye/extrinsics.yaml
+
+Per-sample residuals:
+sample_001.json: trans=650522059802590336.00 mm, rot=168.581 deg
+sample_002.json: trans=650522059802590336.00 mm, rot=154.917 deg
+sample_003.json: trans=650522059802590464.00 mm, rot=175.262 deg
+sample_004.json: trans=650522059802590464.00 mm, rot=176.034 deg
+sample_005.json: trans=650522059802590336.00 mm, rot=167.814 deg
+sample_006.json: trans=650522059802590464.00 mm, rot=171.622 deg
+sample_007.json: trans=650522059802590336.00 mm, rot=165.941 deg
+sample_008.json: trans=650522059802590336.00 mm, rot=154.253 deg
+sample_009.json: trans=650522059802590336.00 mm, rot=154.253 deg
+sample_010.json: trans=650522059802590464.00 mm, rot=174.695 deg
+sample_011.json: trans=650522059802590336.00 mm, rot=172.601 deg
+sample_012.json: trans=650522059802590464.00 mm, rot=160.398 deg
+sample_013.json: trans=650522059802590336.00 mm, rot=163.660 deg
+sample_014.json: trans=650522059802590336.00 mm, rot=170.796 deg
+sample_015.json: trans=650522059802590464.00 mm, rot=167.060 deg
+sample_016.json: trans=650522059802590336.00 mm, rot=172.335 deg
+sample_017.json: trans=650522059802590464.00 mm, rot=166.506 deg
+sample_018.json: trans=650522059802590592.00 mm, rot=174.414 deg
+sample_019.json: trans=650522059802590592.00 mm, rot=136.810 deg
+sample_020.json: trans=650522059802590592.00 mm, rot=149.545 deg
+
+Static TF publisher (verify in RViz):
+ros2 run tf2_ros static_transform_publisher --x 330635708782729.500000 --y 0.000000 --z 560231182966056.375000 --roll 0.000000 --pitch -0.000000 --yaw 0.000000 --frame-id base_link --child-frame-id camera_optical

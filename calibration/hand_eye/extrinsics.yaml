@@ -1,0 +1,38 @@
+calibration_type: eye_to_hand
+base_frame: base_link
+camera_frame: camera_optical
+effector_frame: hand_tcp
+method: CALIB_HAND_EYE_TSAI
+intrinsics_file: /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/calibration/berxel/intrinsics.yaml
+marker:
+  dictionary: DICT_APRILTAG_36h11
+  id: 0
+  size_m: 0.06
+T_base_cam:
+- - 1.0
+  - -1.1216795237365052e-17
+  - -1.4406865380864998e-18
+  - 330635708782729.5
+- - 1.1216795237365052e-17
+  - 1.0
+  - -6.777521898581172e-19
+  - 0.0
+- - 1.4406865380864998e-18
+  - 6.777521898581172e-19
+  - 1.0
+  - 560231182966056.4
+- - 0.0
+  - 0.0
+  - 0.0
+  - 1.0
+translation_m:
+  x: 330635708782729.5
+  y: 0.0
+  z: 560231182966056.4
+rpy_rad:
+  roll: 6.777521898581172e-19
+  pitch: -1.4406865380864998e-18
+  yaw: 1.1216795237365052e-17
+sample_count: 20
+residual_translation_mm: 6.505220598025906e+17
+residual_rotation_deg: 164.8747550725721
