@@ -2,37 +2,65 @@ calibration_type: eye_to_hand
 base_frame: base_link
 camera_frame: camera_optical
 effector_frame: hand_tcp
-method: CALIB_HAND_EYE_TSAI
+marker_frame: apriltag
+method: CALIB_HAND_EYE_HORAUD
 intrinsics_file: /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/calibration/berxel/intrinsics.yaml
 marker:
   dictionary: DICT_APRILTAG_36h11
   id: 0
   size_m: 0.06
 T_base_cam:
-- - 1.0
-  - -1.1216795237365052e-17
-  - -1.4406865380864998e-18
-  - 330635708782729.5
-- - 1.1216795237365052e-17
-  - 1.0
-  - -6.777521898581172e-19
+- - 0.96615290492848
+  - -0.19454117621279282
+  - -0.1694175169691814
+  - 0.44635434929552936
+- - -0.1678088880374094
+  - 0.02484314092030713
+  - -0.9855064664652702
+  - 0.37086454076767356
+- - 0.19593045039990076
+  - 0.9805797005378795
+  - -0.008643465690056206
+  - 0.09204979466289653
+- - 0.0
   - 0.0
-- - 1.4406865380864998e-18
-  - 6.777521898581172e-19
+  - 0.0
   - 1.0
-  - 560231182966056.4
+T_gripper_tag:
+- - -0.9846960553427487
+  - -0.1688428317026339
+  - -0.04319463826757045
+  - 0.026437199836552586
+- - -0.03651996624781931
+  - -0.042440726716350366
+  - 0.9984313079932168
+  - 0.010852237329469095
+- - -0.17041118114046516
+  - 0.98472883724324
+  - 0.035625081668503006
+  - 0.05481394701837733
 - - 0.0
   - 0.0
   - 0.0
   - 1.0
 translation_m:
-  x: 330635708782729.5
-  y: 0.0
-  z: 560231182966056.4
+  x: 0.44635434929552936
+  y: 0.37086454076767356
+  z: 0.09204979466289653
 rpy_rad:
-  roll: 6.777521898581172e-19
-  pitch: -1.4406865380864998e-18
-  yaw: 1.1216795237365052e-17
-sample_count: 20
-residual_translation_mm: 6.505220598025906e+17
-residual_rotation_deg: 164.8747550725721
+  roll: 1.5796107473215042
+  pitch: -0.1972062014136343
+  yaw: -0.17197209050523635
+gripper_tag_translation_m:
+  x: 0.026437199836552586
+  y: 0.010852237329469095
+  z: 0.05481394701837733
+gripper_tag_rpy_rad:
+  roll: 1.534634542661094
+  pitch: 0.17124693883298986
+  yaw: -3.1045220919533842
+sample_count: 25
+residual_translation_mm: 15.186171399782818
+residual_rotation_deg: 4.919518568232845
+residual_definition: spread of inv(T_base_gripper)@T_base_cam@T_cam_tag around mean
+  T_gripper_tag (Tag need not coincide with TCP)

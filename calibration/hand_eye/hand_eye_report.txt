@@ -1,30 +1,39 @@
-Samples used: 20
-Method: CALIB_HAND_EYE_TSAI
-Mean residual translation: 650522059802590592.000 mm
-Mean residual rotation: 164.875 deg
+Samples used: 25
+Method: CALIB_HAND_EYE_HORAUD
+Mean offset residual translation: 15.186 mm
+Mean offset residual rotation: 4.920 deg
+Estimated Tag pose in gripper/TCP frame [m]: xyz=(0.0264, 0.0109, 0.0548)
 Output: /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/calibration/hand_eye/extrinsics.yaml
 
-Per-sample residuals:
-sample_001.json: trans=650522059802590336.00 mm, rot=168.581 deg
-sample_002.json: trans=650522059802590336.00 mm, rot=154.917 deg
-sample_003.json: trans=650522059802590464.00 mm, rot=175.262 deg
-sample_004.json: trans=650522059802590464.00 mm, rot=176.034 deg
-sample_005.json: trans=650522059802590336.00 mm, rot=167.814 deg
-sample_006.json: trans=650522059802590464.00 mm, rot=171.622 deg
-sample_007.json: trans=650522059802590336.00 mm, rot=165.941 deg
-sample_008.json: trans=650522059802590336.00 mm, rot=154.253 deg
-sample_009.json: trans=650522059802590336.00 mm, rot=154.253 deg
-sample_010.json: trans=650522059802590464.00 mm, rot=174.695 deg
-sample_011.json: trans=650522059802590336.00 mm, rot=172.601 deg
-sample_012.json: trans=650522059802590464.00 mm, rot=160.398 deg
-sample_013.json: trans=650522059802590336.00 mm, rot=163.660 deg
-sample_014.json: trans=650522059802590336.00 mm, rot=170.796 deg
-sample_015.json: trans=650522059802590464.00 mm, rot=167.060 deg
-sample_016.json: trans=650522059802590336.00 mm, rot=172.335 deg
-sample_017.json: trans=650522059802590464.00 mm, rot=166.506 deg
-sample_018.json: trans=650522059802590592.00 mm, rot=174.414 deg
-sample_019.json: trans=650522059802590592.00 mm, rot=136.810 deg
-sample_020.json: trans=650522059802590592.00 mm, rot=149.545 deg
+Note: residual measures consistency of rigid Tag-TCP offset,
+NOT T_base_cam@T_cam_tag ~= T_base_gripper (that old check is wrong when Tag != TCP).
+
+Per-sample offset residuals:
+sample_001.json: trans=18.25 mm, rot=8.224 deg
+sample_002.json: trans=9.21 mm, rot=2.827 deg
+sample_003.json: trans=11.70 mm, rot=5.520 deg
+sample_004.json: trans=3.93 mm, rot=7.624 deg
+sample_005.json: trans=16.60 mm, rot=4.304 deg
+sample_006.json: trans=15.84 mm, rot=10.111 deg
+sample_007.json: trans=18.08 mm, rot=2.914 deg
+sample_008.json: trans=9.64 mm, rot=2.630 deg
+sample_009.json: trans=11.25 mm, rot=3.874 deg
+sample_010.json: trans=20.47 mm, rot=4.115 deg
+sample_011.json: trans=20.39 mm, rot=4.589 deg
+sample_012.json: trans=12.77 mm, rot=9.929 deg
+sample_013.json: trans=27.82 mm, rot=3.870 deg
+sample_014.json: trans=19.95 mm, rot=1.295 deg
+sample_015.json: trans=19.45 mm, rot=3.994 deg
+sample_016.json: trans=21.91 mm, rot=4.252 deg
+sample_017.json: trans=7.22 mm, rot=6.651 deg
+sample_018.json: trans=11.20 mm, rot=2.744 deg
+sample_019.json: trans=10.46 mm, rot=10.493 deg
+sample_020.json: trans=20.65 mm, rot=1.375 deg
+sample_021.json: trans=8.07 mm, rot=2.104 deg
+sample_022.json: trans=21.95 mm, rot=3.057 deg
+sample_023.json: trans=17.75 mm, rot=7.762 deg
+sample_024.json: trans=11.65 mm, rot=4.539 deg
+sample_025.json: trans=13.47 mm, rot=4.190 deg
 
 Static TF publisher (verify in RViz):
-ros2 run tf2_ros static_transform_publisher --x 330635708782729.500000 --y 0.000000 --z 560231182966056.375000 --roll 0.000000 --pitch -0.000000 --yaw 0.000000 --frame-id base_link --child-frame-id camera_optical
+ros2 run tf2_ros static_transform_publisher --x 0.446354 --y 0.370865 --z 0.092050 --roll 1.579611 --pitch -0.197206 --yaw -0.171972 --frame-id base_link --child-frame-id camera_optical
