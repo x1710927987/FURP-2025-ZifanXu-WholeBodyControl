@@ -44,6 +44,9 @@ Thumbs.db
 data/
 !**/data/.gitkeep
 
+# Local hand-eye collection backups (do not commit)
+calibration/hand_eye/samples_backup_*/
+
 # Secrets — NEVER commit credentials
 .env
 *.key
