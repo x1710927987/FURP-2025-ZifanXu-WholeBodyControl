@@ -3,7 +3,7 @@
 set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 BERXEL_DATA="$REPO/calibration/berxel"
 
 mkdir -p "$BERXEL_DATA/calib_images"

@@ -25,4 +25,4 @@ ros2 run controller_manager spawner joint_trajectory_controller --controller-man
 ros2 run controller_manager spawner gripper_trajectory_controller --controller-manager-timeout 30 || true
 
 echo "==> Stack ready (launch PID: $LAUNCH_PID, log: /tmp/panda_fake_control.log)"
-echo "==> Run EE tests in another WSL terminal: bash scripts/wsl_run_ee_tests.sh"
+echo "==> Run EE tests in another WSL terminal: bash scripts/wsl/run_ee_tests.sh"

@@ -24,7 +24,10 @@ if (-not $busid) {
 }
 
 Write-Host "==> Binding busid $busid (ignore error if already shared)..."
-& $usbipd bind --busid $busid 2>$null
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
+& $usbipd bind --busid $busid 2>&1 | Out-Null
+$ErrorActionPreference = $prevEap
 
 Write-Host "==> Attaching to RoArm_M3..."
 & $usbipd attach --wsl RoArm_M3 --busid $busid

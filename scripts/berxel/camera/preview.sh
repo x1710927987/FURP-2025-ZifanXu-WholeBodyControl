@@ -9,7 +9,7 @@ echo "=== Berxel iHawk100 preview ==="
 
 if [ ! -e "$CAMERA_DEV" ]; then
     echo "Error: $CAMERA_DEV not found. Attach camera first:"
-    echo "  powershell -ExecutionPolicy Bypass -File scripts/berxel_attach_camera.ps1"
+    echo "  powershell -ExecutionPolicy Bypass -File scripts/berxel/camera/attach_camera.ps1"
     exit 1
 fi
 

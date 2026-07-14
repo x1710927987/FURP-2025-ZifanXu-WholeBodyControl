@@ -23,8 +23,8 @@
 ```bash
 wsl -d Ubuntu-24.04
 REPO=/mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl
-bash "$REPO/scripts/berxel_calib_collect.sh" --auto
-bash "$REPO/scripts/berxel_calib_run.sh"
+bash "$REPO/scripts/berxel/calibration/collect.sh" --auto
+bash "$REPO/scripts/berxel/calibration/run.sh"
 ```
 
 脚本与详细说明见 [`scripts/README.md`](../scripts/README.md) 场景 B1–B3。

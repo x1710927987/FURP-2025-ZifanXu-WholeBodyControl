@@ -19,7 +19,7 @@ DEFAULT_ROWS = 6
 
 
 def default_berxel_data_dir() -> Path:
-    return Path(__file__).resolve().parent.parent / "calibration" / "berxel"
+    return Path(__file__).resolve().parents[3] / "calibration" / "berxel"
 
 
 def open_camera(device: str, width: int, height: int) -> cv2.VideoCapture:

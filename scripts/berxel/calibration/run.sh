@@ -3,12 +3,12 @@
 set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 BERXEL_DATA="${BERXEL_DATA_DIR:-$REPO/calibration/berxel}"
 
 python3 -c "import yaml" 2>/dev/null || pip3 install --user pyyaml
 
-python3 "$SCRIPT_DIR/berxel_calib_run.py" \
+python3 "$SCRIPT_DIR/run.py" \
     --images "$BERXEL_DATA/calib_images" \
     --output "$BERXEL_DATA/intrinsics.yaml" \
     --cols 8 --rows 6 --square-size 0.025 \

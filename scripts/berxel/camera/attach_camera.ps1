@@ -1,5 +1,5 @@
 # Attach Berxel iHawk100 USB camera to WSL2 (run as Administrator).
-# Usage: powershell -ExecutionPolicy Bypass -File scripts/berxel_attach_camera.ps1
+# Usage: powershell -ExecutionPolicy Bypass -File scripts/berxel/camera/attach_camera.ps1
 
 $ErrorActionPreference = "Stop"
 $usbipd = "C:\Program Files\usbipd-win\usbipd.exe"
@@ -28,7 +28,10 @@ if ($state -match "Attached") {
     Write-Host "Camera already attached (busid $busid)." -ForegroundColor Yellow
 } else {
     Write-Host "==> Binding and attaching busid $busid..."
-    & $usbipd bind --busid $busid 2>$null
+    $prevEap = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    & $usbipd bind --busid $busid 2>&1 | Out-Null
+    $ErrorActionPreference = $prevEap
     & $usbipd attach --wsl --busid $busid
     Write-Host "Attached successfully." -ForegroundColor Green
 }
@@ -36,4 +39,4 @@ if ($state -match "Attached") {
 Write-Host ""
 Write-Host "Next in WSL (Ubuntu-24.04):" -ForegroundColor Yellow
 Write-Host "  ls /dev/video*" -ForegroundColor White
-Write-Host "  bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel_calib_collect.sh" -ForegroundColor White
+Write-Host "  bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel/calibration/collect.sh" -ForegroundColor White

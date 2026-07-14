@@ -11,7 +11,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from berxel_handeye_common import (
+from common import (
     default_hand_eye_dir,
     default_intrinsics_path,
     detect_apriltag,

@@ -39,9 +39,9 @@
 
 **Progress this week**
 
-- Set up **RoArm-M3** on dedicated WSL distro `RoArm_M3` (Humble): USB attach via [`scripts/roarm_attach_usb.ps1`](../scripts/roarm_attach_usb.ps1), driver, RViz display, MoveIt2, Servo keyboard control, command-control services, and MTC demos (`cartesian` / `pick_place`)
+- Set up **RoArm-M3** on dedicated WSL distro `RoArm_M3` (Humble): USB attach via [`scripts/roarm/attach_usb.ps1`](../scripts/roarm/attach_usb.ps1), driver, RViz display, MoveIt2, Servo keyboard control, command-control services, and MTC demos (`cartesian` / `pick_place`)
 - Completed **Berxel iHawk100Q RGB intrinsic calibration**: 25 checkerboard images (8×6, 25 mm), RMS reprojection **0.44 px** — see [`calibration/berxel/`](../calibration/berxel/) and scripts B1–B3 in [`scripts/README.md`](../scripts/README.md)
-- Added Berxel camera USB attach, preview, snapshot, and OpenCV calibration scripts under [`scripts/berxel_*`](../scripts/)
+- Added Berxel camera USB attach, preview, snapshot, and OpenCV calibration scripts under [`scripts/berxel/`](../scripts/berxel/)
 - Started **Eye-to-Hand hand-eye calibration** (AprilTag on arm, fixed camera): collected 20 pose–image pairs into [`calibration/hand_eye/samples/`](../calibration/hand_eye/samples/); solve step needs debugging (residuals far above target — likely Tag size mm vs m or frame convention)
 - Verified RoArm TF tree (`base_link`, `hand_tcp`, `ihawk_color_optical_frame`) via `view_frames` (see `.local/Archive/frames_2026-07-10_15.14.29.pdf`)
 - Pushed commit `4ba2db6` — Berxel calibration + RoArm-M3 WSL helpers
@@ -120,7 +120,7 @@
 
 **Hours spent (optional):** approximately 10h
 
-**Links (optional):** [`docs/moveit_pose_dataflow.md`](moveit_pose_dataflow.md), [`src/moveit_ee_tutorial/README.md`](../src/moveit_ee_tutorial/README.md), [`scripts/wsl_setup_moveit.sh`](../scripts/wsl_setup_moveit.sh)
+**Links (optional):** [`docs/moveit_pose_dataflow.md`](moveit_pose_dataflow.md), [`src/moveit_ee_tutorial/README.md`](../src/moveit_ee_tutorial/README.md), [`scripts/wsl/setup_moveit.sh`](../scripts/wsl/setup_moveit.sh)
 
 ### Week 1 — 2026-06-22
 

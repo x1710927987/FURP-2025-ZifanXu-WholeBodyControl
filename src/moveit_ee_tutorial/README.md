@@ -6,7 +6,7 @@ Phase 1 tutorial for FURP: plan and execute end-effector poses with **MoveIt 2**
 
 - WSL2 Ubuntu 24.04 + ROS 2 Jazzy
 - Workspace: `~/ros2_ws` (`panda_gz_moveit2` + `pymoveit2`)
-- Setup script: [`../../scripts/wsl_setup_moveit.sh`](../../scripts/wsl_setup_moveit.sh)
+- Setup script: [`../../scripts/wsl/setup_moveit.sh`](../../scripts/wsl/setup_moveit.sh)
 
 Add to `~/.bashrc`:
 
@@ -22,7 +22,7 @@ source ~/ros2_ws/install/local_setup.bash
 **Terminal 1 — RViz + MoveIt (fake hardware):**
 
 ```bash
-bash scripts/wsl_launch_fake_control.sh
+bash scripts/wsl/launch_fake_control.sh
 ```
 
 This stops stale nodes, launches `ex_fake_control`, waits 15s, then re-spawns controllers (fixes Jazzy spawner race). Log: `/tmp/panda_fake_control.log`.
@@ -73,7 +73,7 @@ ros2 launch panda_moveit_config ex_gz_control.launch.py
 From repo root (inside WSL):
 
 ```bash
-bash scripts/wsl_run_ee_tests.sh
+bash scripts/wsl/run_ee_tests.sh
 ```
 
 ## What you should see
@@ -86,7 +86,7 @@ bash scripts/wsl_run_ee_tests.sh
 With fake control running:
 
 ```bash
-bash scripts/wsl_test_collision_planning.sh
+bash scripts/wsl/test_collision_planning.sh
 ```
 
 This adds a sphere obstacle (`ex_collision_primitive.py`), plans an EE pose, then clears the scene (`ex_clear_planning_scene.py` requires `pip3 install trimesh`).
@@ -94,7 +94,7 @@ This adds a sphere obstacle (`ex_collision_primitive.py`), plans an EE pose, the
 Note: `panda_gz_moveit2` ships without link collision meshes, so collision-aware planning may return `FAILURE` even after adding scene obstacles. Adding the primitive to the planning scene still works and is visible in RViz.
 
 
-`panda_gz_moveit2` uses `mock_components/GenericSystem` instead of `fake_components` on Jazzy. Re-apply via `scripts/wsl_setup_moveit.sh` after a fresh clone.
+`panda_gz_moveit2` uses `mock_components/GenericSystem` instead of `fake_components` on Jazzy. Re-apply via `scripts/wsl/setup_moveit.sh` after a fresh clone.
 
 ## Next: lab dual-arm platform
 

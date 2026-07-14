@@ -20,20 +20,33 @@
 
 ## 流程
 
+### 全自动（推荐：快速版）
+
 ```bash
 # 1. 管理员 PowerShell：attach 相机 + 机械臂 USB
-# 2. RoArm_M3 终端1：roarm_launch_driver.sh
-# 3. RoArm_M3 终端2：roarm_launch_command_control.sh
+# 2. RoArm_M3 终端1：scripts/roarm/launch_driver.sh
+# 3. RoArm_M3 终端2：scripts/roarm/launch_command_control.sh
 # 4. Ubuntu-24.04：
-bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel_handeye_collect.sh --tag-size 0.006
-bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel_handeye_solve.sh
+bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel/handeye/auto_fast.sh \
+  --tag-size 0.06 --target-samples 25 --fresh
+```
+
+完整版（含 joint_states 抓夹监测，较慢）：将 `auto_fast.sh` 换为 `auto.sh`。
+
+### 手动采集 + 解算
+
+```bash
+# 1~3 同上
+# 4. Ubuntu-24.04：
+bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel/handeye/collect.sh --tag-size 0.006
+bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/berxel/handeye/solve.sh
 ```
 
 若 Tag 实测为 60 mm：
 
 ```bash
-bash .../berxel_handeye_collect.sh --tag-size 0.06
-bash .../berxel_handeye_solve.sh --tag-size 0.06
+bash .../berxel/handeye/collect.sh --tag-size 0.06
+bash .../berxel/handeye/solve.sh --tag-size 0.06
 ```
 
 ## 验收

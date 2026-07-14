@@ -13,7 +13,7 @@ import yaml
 
 
 def default_berxel_data_dir() -> Path:
-    return Path(__file__).resolve().parent.parent / "calibration" / "berxel"
+    return Path(__file__).resolve().parents[3] / "calibration" / "berxel"
 
 
 def build_object_points(pattern_size: tuple[int, int], square_size: float) -> np.ndarray:

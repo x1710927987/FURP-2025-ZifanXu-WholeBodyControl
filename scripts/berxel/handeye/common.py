@@ -18,7 +18,7 @@ ARUCO_DICT_MAP = {
 
 
 def repo_root() -> Path:
-    return Path(__file__).resolve().parent.parent
+    return Path(__file__).resolve().parents[3]
 
 
 def default_intrinsics_path() -> Path:
@@ -137,20 +137,98 @@ def wsl_executable() -> str:
     return "wsl"
 
 
-def read_roarm_pose(wsl_distro: str = "RoArm_M3", timeout_s: int = 20) -> dict:
-    ros_cmd = (
+ROARM_WS_SETUP = "/home/ag/roarm_ws/roarm_ws-ros2-humble/install/setup.bash"
+
+
+def ros_env_prefix() -> str:
+    return (
         "source /opt/ros/humble/setup.bash && "
         "export ROARM_MODEL=roarm_m3 && "
-        "source ~/roarm_ws/roarm_ws-ros2-humble/install/setup.bash && "
-        "ros2 service call /get_pose_cmd roarm_msgs/srv/GetPoseCmd"
+        f"source {ROARM_WS_SETUP} && "
     )
-    cmd = [wsl_executable(), "-d", wsl_distro, "bash", "-lc", ros_cmd]
-    result = subprocess.run(
-        cmd,
-        capture_output=True,
-        text=True,
-        timeout=timeout_s,
-        check=False,
+
+
+def run_roarm_ros(
+    ros_cmd: str,
+    wsl_distro: str = "RoArm_M3",
+    timeout_s: int = 60,
+) -> subprocess.CompletedProcess[str]:
+    # Nested wsl.exe from another distro fails if cwd is a Linux-home path
+    # (e.g. /home/zifan -> \\wsl.localhost\Ubuntu-24.04\...). Use a
+    # Windows-visible cwd and --cd into RoArm_M3 home.
+    full_cmd = ros_env_prefix() + ros_cmd
+    cmd = [
+        wsl_executable(),
+        "-d",
+        wsl_distro,
+        "--cd",
+        "/home/ag",
+        "bash",
+        "-lc",
+        full_cmd,
+    ]
+    host_cwd = "/mnt/c/Windows/System32"
+    if not Path(host_cwd).is_dir():
+        host_cwd = "/mnt/d"
+    try:
+        return subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+            check=False,
+            cwd=host_cwd,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            f"RoArm ROS command timed out after {timeout_s}s.\n"
+            f"Command: {ros_cmd}\n"
+            "Ensure RoArm_M3 is running scripts/roarm/launch_driver.sh and "
+            "scripts/roarm/launch_command_control.sh, then retry."
+        ) from exc
+
+
+def check_roarm_pose_only(wsl_distro: str = "RoArm_M3") -> None:
+    """Verify /get_pose_cmd only (fast path; no joint_states probe)."""
+    try:
+        read_roarm_pose(wsl_distro=wsl_distro, timeout_s=60)
+    except RuntimeError as exc:
+        raise RuntimeError(
+            "Cannot reach /get_pose_cmd. In RoArm_M3, start:\n"
+            "  scripts/roarm/launch_driver.sh\n"
+            "  scripts/roarm/launch_command_control.sh\n"
+            "Then verify: ros2 service call /get_pose_cmd roarm_msgs/srv/GetPoseCmd"
+        ) from exc
+
+
+def check_roarm_stack(wsl_distro: str = "RoArm_M3") -> float | None:
+    """Verify RoArm stack; return gripper home angle if joint_states is readable."""
+    try:
+        read_roarm_pose(wsl_distro=wsl_distro, timeout_s=90)
+    except RuntimeError as exc:
+        raise RuntimeError(
+            "Cannot reach /get_pose_cmd. In RoArm_M3, start:\n"
+            "  roarm_launch_driver.sh\n"
+            "  roarm_launch_command_control.sh\n"
+            "Then verify: ros2 service call /get_pose_cmd roarm_msgs/srv/GetPoseCmd"
+        ) from exc
+
+    try:
+        joints = read_joint_states(wsl_distro=wsl_distro, timeout_s=90)
+    except RuntimeError:
+        print(
+            "WARNING: /joint_states not readable via cross-WSL probe. "
+            "Continuing with pose-only constraint checks."
+        )
+        return None
+    return joints.get("link5_to_gripper_link")
+
+
+def read_roarm_pose(wsl_distro: str = "RoArm_M3", timeout_s: int = 90) -> dict:
+    result = run_roarm_ros(
+        "timeout 45 ros2 service call /get_pose_cmd roarm_msgs/srv/GetPoseCmd",
+        wsl_distro=wsl_distro,
+        timeout_s=timeout_s,
     )
     if result.returncode != 0:
         raise RuntimeError(
@@ -167,6 +245,93 @@ def read_roarm_pose(wsl_distro: str = "RoArm_M3", timeout_s: int = 20) -> dict:
         raise RuntimeError(f"Could not parse GetPoseCmd response:\n{result.stdout}")
     keys = ["x", "y", "z", "roll", "pitch", "yaw"]
     return {k: float(v) for k, v in zip(keys, match.groups())}
+
+
+def parse_joint_states_message(text: str) -> dict[str, float]:
+    names: list[str] = []
+    positions: list[float] = []
+    section: str | None = None
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if line == "name:":
+            section = "name"
+            continue
+        if line == "position:":
+            section = "position"
+            continue
+        if not line.startswith("- "):
+            if section == "name" and line and not line.endswith(":"):
+                section = None
+            continue
+        value = line[2:].strip()
+        if section == "name":
+            names.append(value)
+        elif section == "position":
+            positions.append(float(value))
+    if not names or len(names) != len(positions):
+        raise RuntimeError(f"Could not parse /joint_states message:\n{text}")
+    return dict(zip(names, positions))
+
+
+def read_joint_states(wsl_distro: str = "RoArm_M3", timeout_s: int = 90) -> dict[str, float]:
+    result = run_roarm_ros(
+        "timeout 75 ros2 topic echo /joint_states --once",
+        wsl_distro=wsl_distro,
+        timeout_s=timeout_s,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            "Failed to read /joint_states.\n"
+            f"stderr: {result.stderr.strip()}"
+        )
+    return parse_joint_states_message(result.stdout)
+
+
+def call_move_joint_cmd(
+    x: float,
+    y: float,
+    z: float,
+    roll: float,
+    pitch: float,
+    yaw: float = 0.0,
+    wsl_distro: str = "RoArm_M3",
+    timeout_s: int = 180,
+) -> tuple[bool, str]:
+    request = (
+        f"{{x: {x}, y: {y}, z: {z}, roll: {roll}, pitch: {pitch}, yaw: {yaw}}}"
+    )
+    result = run_roarm_ros(
+        "ros2 service call /move_joint_cmd roarm_msgs/srv/MoveJointCmd "
+        f"'{request}'",
+        wsl_distro=wsl_distro,
+        timeout_s=timeout_s,
+    )
+    if result.returncode != 0:
+        return False, result.stderr.strip() or "move_joint_cmd failed"
+    if "success=True" in result.stdout or "success: true" in result.stdout.lower():
+        return True, "ok"
+    if "Planning failed" in result.stdout:
+        return False, "planning failed"
+    message_match = re.search(r"message='([^']*)'", result.stdout)
+    message = message_match.group(1) if message_match else result.stdout.strip()
+    return False, message or "unknown move_joint_cmd failure"
+
+
+def go_home_pose(
+    home_pose: dict[str, float],
+    wsl_distro: str = "RoArm_M3",
+    timeout_s: int = 120,
+) -> tuple[bool, str]:
+    return call_move_joint_cmd(
+        home_pose["x"],
+        home_pose["y"],
+        home_pose["z"],
+        home_pose["roll"],
+        home_pose["pitch"],
+        home_pose.get("yaw", 0.0),
+        wsl_distro=wsl_distro,
+        timeout_s=timeout_s,
+    )
 
 
 def save_sample_json(path: Path, payload: dict) -> None:

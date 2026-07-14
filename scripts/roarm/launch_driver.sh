@@ -8,7 +8,7 @@ source ~/roarm_ws/roarm_ws-ros2-humble/install/setup.bash
 
 SERIAL="${1:-/dev/ttyUSB0}"
 if [[ ! -e "$SERIAL" ]]; then
-  echo "ERROR: $SERIAL not found. Run roarm_attach_usb.ps1 from Admin PowerShell first."
+  echo "ERROR: $SERIAL not found. Run scripts/roarm/attach_usb.ps1 from Admin PowerShell first."
   exit 1
 fi
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # WSL setup for pymoveit2 + panda_gz_moveit2 (ROS 2 Jazzy)
-# Run inside WSL: bash scripts/wsl_setup_moveit.sh
+# Run inside WSL: bash scripts/wsl/setup_moveit.sh
 
 set -eo pipefail
 

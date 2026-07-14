@@ -2,7 +2,7 @@
 
 > **场景：** `ex_fake_control.launch.py`（RViz + mock 硬件）+ `ex_pose_goal.py` 末端位姿目标  
 > **平台：** WSL2 Ubuntu 24.04 · ROS 2 Jazzy · Panda 代理（Phase 1）  
-> **对应脚本：** [`scripts/wsl_launch_fake_control.sh`](../scripts/wsl_launch_fake_control.sh)、[`scripts/wsl_test_pose_goal.sh`](../scripts/wsl_test_pose_goal.sh)
+> **对应脚本：** [`scripts/wsl/launch_fake_control.sh`](../scripts/wsl/launch_fake_control.sh)、[`scripts/wsl/test_pose_goal.sh`](../scripts/wsl/test_pose_goal.sh)
 
 本文档回答项管要求：**机械臂能动了之后，画出计算图，标出数据类型与数据方向**。
 
@@ -12,7 +12,7 @@
 
 在 **fake control** 模式下，MoveIt 2 通过 `mock_components/GenericSystem` 模拟关节运动（无 Gazebo 物理）。用户在终端 2 运行 `ex_pose_goal.py`，传入末端目标位姿 `(x, y, z)` 与四元数 `quat_xyzw`；pymoveit2 先向 `move_group` **请求规划**，再 **请求执行** 关节轨迹；`move_group` 将轨迹下发给 `joint_trajectory_controller`，经 `ros2_control_node` 驱动 mock 关节；`joint_state_broadcaster` 将当前关节状态发布到 `/joint_states`，供规划器与 RViz 反馈使用。
 
-> **Jazzy 注意：** launch 内 spawner 可能因竞态失败，需使用 [`wsl_launch_fake_control.sh`](../scripts/wsl_launch_fake_control.sh) 的 15 s 延迟后手动 spawn（见 [`scripts/README.md`](../scripts/README.md) 场景 2）。
+> **Jazzy 注意：** launch 内 spawner 可能因竞态失败，需使用 [`wsl/launch_fake_control.sh`](../scripts/wsl/launch_fake_control.sh) 的 15 s 延迟后手动 spawn（见 [`scripts/README.md`](../scripts/README.md) 场景 2）。
 
 ---
 
@@ -133,18 +133,18 @@ fake control 栈启动后，主要节点（详见 [`figures/week2_ros_nodes.txt`
 
 ## 6. 复现步骤
 
-**前置：** 已运行 [`scripts/wsl_setup_moveit.sh`](../scripts/wsl_setup_moveit.sh)。
+**前置：** 已运行 [`scripts/wsl/setup_moveit.sh`](../scripts/wsl/setup_moveit.sh)。
 
 **终端 1（WSL）：**
 
 ```bash
-bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/wsl_launch_fake_control.sh
+bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/wsl/launch_fake_control.sh
 ```
 
 **终端 2（WSL）：**
 
 ```bash
-bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/wsl_test_pose_goal.sh
+bash /mnt/d/Repository/internship_and_research/FURP-2025-ZifanXu-WholeBodyControl/scripts/wsl/test_pose_goal.sh
 ```
 
 **期望输出：** `Moving to {position: [0.25, 0.0, 1.0], quat_xyzw: [0.0, 0.0, 0.0, 1.0]}`；RViz 中 Panda 末端朝目标运动。
