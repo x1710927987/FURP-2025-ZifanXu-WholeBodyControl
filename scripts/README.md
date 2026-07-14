@@ -181,7 +181,8 @@ bash scripts/wsl/run_ee_tests.sh
 | `berxel/handeye/auto_fast.sh` | 手眼全自动（快速，仅 pose 约束） | 1 | 相机 + RoArm 已启动 |
 | `berxel/handeye/solve.sh` | 手眼标定解算 | 1 | 已采集 hand_eye 样本 |
 | `berxel/handeye/move_to_tag.sh` | 检测 AprilTag → 移动 TCP | 1 | 外参已标定 + 相机 + RoArm |
-| `berxel/handeye/grasp_apriltag.sh` | Tag 两段式接近（悬停再下降） | 1 | 外参已标定 + 相机 + RoArm |
+| `berxel/handeye/grasp_apriltag.sh` | Tag 抓取 demo（悬停→下降→夹爪→抬起） | 1 | 外参已标定 + 相机 + RoArm |
+| `berxel/handeye/tag_to_mtc_pose.sh` | 检测 Tag → 生成 MTC `object_pose` 命令 | 1 | 外参已标定 + 相机 |
 
 ---
 
@@ -357,9 +358,19 @@ bash .../scripts/roarm/launch_mtc_demo.sh
 bash .../scripts/roarm/run_mtc.sh cartesian
 bash .../scripts/roarm/run_mtc.sh cartesian_modular
 bash .../scripts/roarm/run_mtc.sh pick_place
+
+# 用 AprilTag 覆盖默认 object_pose（先在 Ubuntu-24.04 跑 tag_to_mtc_pose.sh）
+bash .../scripts/roarm/run_mtc.sh pick_place \
+  --object-pose 0.25 0.05 0.08 0 0 0 \
+  --place-pose 0.20 0.15 0.08 0 0 0 \
+  --spawn-table false
 ```
 
 在 MTC 界面选中完整路径后点击 **Exec**。
+
+**Tag → pick_place：** 官方 demo 读 `roarm_config.yaml` 的 `object_pose`，不会读相机。
+跨 WSL 流程见 `berxel/handeye/tag_to_mtc_pose.sh`（检测 Tag → 打印覆盖命令）。
+注意 MTC 用 `driver + launch_mtc_demo`，与 `command_control` / `grasp_apriltag` 不要同时开。
 
 | 脚本 | 作用 |
 |------|------|
@@ -372,7 +383,7 @@ bash .../scripts/roarm/run_mtc.sh pick_place
 | `roarm/launch_command_control.sh` | 指令控制 launch（终端 2） |
 | `roarm/run_command_examples.sh` | 位姿/直线/夹爪/LED/画圆等服务示例（终端 3） |
 | `roarm/launch_mtc_demo.sh` | MTC 演示 UI（终端 2） |
-| `roarm/run_mtc.sh` | MTC 子演示 `cartesian` / `cartesian_modular` / `pick_place`（终端 3） |
+| `roarm/run_mtc.sh` | MTC 子演示；`pick_place` 支持 `--object-pose` / `--place-pose` 覆盖 |
 
 ---
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Two-stage AprilTag approach demo for eye-to-hand (hover then descend)."""
+"""Two-stage AprilTag approach with gripper close and lift (eye-to-hand)."""
 
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ import cv2
 import numpy as np
 
 from common import (
+    call_gripper_cmd,
     check_roarm_pose_only,
     default_hand_eye_dir,
     default_intrinsics_path,
@@ -23,6 +24,7 @@ from common import (
     read_roarm_pose,
 )
 from move_to_tag import (
+    apply_offset,
     compute_target_from_detection,
     detect_once,
     load_T_base_cam,
@@ -31,6 +33,27 @@ from move_to_tag import (
     resolve_orientation,
     warmup_camera,
 )
+
+
+def command_gripper(
+    position_rad: float,
+    label: str,
+    wsl_distro: str,
+    dry_run: bool,
+    settle_s: float,
+) -> int:
+    print(f"--- Gripper: {label} ({position_rad:.3f} rad) ---")
+    if dry_run:
+        print("Dry-run: skip gripper command.")
+        return 0
+    ok, message = call_gripper_cmd(position_rad, wsl_distro=wsl_distro)
+    if not ok:
+        print(f"Gripper command failed: {message}")
+        return 1
+    if settle_s > 0:
+        print(f"Waiting {settle_s:.1f}s for gripper motion...")
+        time.sleep(settle_s)
+    return 0
 
 
 def run(args: argparse.Namespace) -> int:
@@ -51,20 +74,28 @@ def run(args: argparse.Namespace) -> int:
     detector, api_mode = make_aruco_detector(dictionary)
     hover_offset = np.array(args.hover_offset, dtype=np.float64)
     grasp_offset = np.array(args.grasp_offset, dtype=np.float64)
+    lift_offset = np.array(args.lift_offset, dtype=np.float64)
 
     cap = open_camera(args.device, width, height)
     warmup_camera(cap)
 
-    print("=== Grasp AprilTag demo (eye-to-hand, two-stage) ===")
+    print("=== Grasp AprilTag demo (eye-to-hand) ===")
     print(f"Tag: id={args.tag_id}, size={args.tag_size} m")
     print(f"Hover offset ({args.offset_frame}): {hover_offset.tolist()} m")
     print(f"Grasp offset ({args.offset_frame}): {grasp_offset.tolist()} m")
+    print(f"Lift offset ({args.offset_frame}): {lift_offset.tolist()} m")
+    if args.no_gripper:
+        print("Gripper: disabled (--no-gripper)")
+    else:
+        print(
+            f"Gripper: open={args.gripper_open:.3f} rad, "
+            f"close={args.gripper_close:.3f} rad"
+        )
     print(
-        "Controls: G=detect + hover + descend, Q=quit"
+        "Controls: G=run full sequence, Q=quit"
         if not args.once
-        else "Mode: --once (hover then descend)"
+        else "Mode: --once"
     )
-    print("Note: gripper open/close is not commanded; this demo only moves TCP.")
 
     window = "Grasp AprilTag (G=go, Q=quit)"
 
@@ -95,6 +126,7 @@ def run(args: argparse.Namespace) -> int:
         _, p_grasp = compute_target_from_detection(
             T_base_cam, T_cam_tag, grasp_offset, args.offset_frame
         )
+        p_lift = apply_offset(T_base_tag, lift_offset, args.offset_frame)
         tag_b = T_base_tag[:3, 3]
         print(
             f"Tag in base (m): ({tag_b[0]:.4f}, {tag_b[1]:.4f}, {tag_b[2]:.4f})"
@@ -106,6 +138,17 @@ def run(args: argparse.Namespace) -> int:
         else:
             current = {"roll": 0.0, "pitch": 0.0, "yaw": 0.0}
         roll, pitch, yaw = resolve_orientation(args, current)
+
+        if not args.no_gripper and not args.skip_gripper_open:
+            rc = command_gripper(
+                args.gripper_open,
+                "open (pre-approach)",
+                args.roarm_wsl,
+                args.dry_run,
+                args.gripper_settle_s,
+            )
+            if rc != 0:
+                return rc
 
         print("--- Stage 1: hover ---")
         rc = move_tcp_to(p_hover, roll, pitch, yaw, args.roarm_wsl, args.dry_run)
@@ -130,15 +173,41 @@ def run(args: argparse.Namespace) -> int:
             )
             if T_cam_tag2 is not None:
                 T_cam_tag = T_cam_tag2
+                T_base_tag, p_hover = compute_target_from_detection(
+                    T_base_cam, T_cam_tag, hover_offset, args.offset_frame
+                )
                 _, p_grasp = compute_target_from_detection(
                     T_base_cam, T_cam_tag, grasp_offset, args.offset_frame
                 )
+                p_lift = apply_offset(T_base_tag, lift_offset, args.offset_frame)
                 print("Re-detected tag before descend.")
             else:
                 print("WARNING: re-detect failed; using first detection for descend.")
 
         print("--- Stage 2: descend (pre-grasp) ---")
-        return move_tcp_to(p_grasp, roll, pitch, yaw, args.roarm_wsl, args.dry_run)
+        rc = move_tcp_to(p_grasp, roll, pitch, yaw, args.roarm_wsl, args.dry_run)
+        if rc != 0:
+            return rc
+
+        if not args.no_gripper:
+            rc = command_gripper(
+                args.gripper_close,
+                "close (grasp)",
+                args.roarm_wsl,
+                args.dry_run,
+                args.gripper_settle_s,
+            )
+            if rc != 0:
+                return rc
+
+        if not args.skip_lift:
+            print("--- Stage 3: lift (retreat) ---")
+            rc = move_tcp_to(p_lift, roll, pitch, yaw, args.roarm_wsl, args.dry_run)
+            if rc != 0:
+                return rc
+
+        print("Grasp sequence complete.")
+        return 0
 
     try:
         if args.once:
@@ -159,7 +228,7 @@ def run(args: argparse.Namespace) -> int:
             cv2.putText(display, status, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
             cv2.putText(
                 display,
-                "hover -> descend",
+                "hover -> descend -> close -> lift",
                 (10, 60),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.55,
@@ -196,8 +265,8 @@ def run(args: argparse.Namespace) -> int:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Two-stage AprilTag approach: hover above tag, then descend closer. "
-            "Uses eye-to-hand T_base_cam. Does not actuate the gripper."
+            "AprilTag grasp demo: hover, descend, close gripper, lift. "
+            "Uses eye-to-hand T_base_cam."
         )
     )
     parser.add_argument("--device", default="/dev/video0")
@@ -228,10 +297,18 @@ def parse_args() -> argparse.Namespace:
         help="Stage-2 TCP offset from tag (m). Default: 2.5 cm above in offset-frame",
     )
     parser.add_argument(
+        "--lift-offset",
+        nargs=3,
+        type=float,
+        default=[0.0, 0.0, 0.10],
+        metavar=("DX", "DY", "DZ"),
+        help="Stage-3 lift TCP offset from tag (m). Default: 10 cm above in offset-frame",
+    )
+    parser.add_argument(
         "--offset-frame",
         choices=("base", "tag"),
         default="base",
-        help="Interpret hover/grasp offsets in base or tag frame (default: base)",
+        help="Interpret hover/grasp/lift offsets in base or tag frame (default: base)",
     )
     parser.add_argument("--roarm-wsl", default="RoArm_M3")
     parser.add_argument("--keep-orientation", action="store_true", default=True)
@@ -257,6 +334,39 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=0.5,
         help="Pause between hover and descend (seconds)",
+    )
+    parser.add_argument(
+        "--gripper-open",
+        type=float,
+        default=0.0,
+        help="Gripper open target (rad). RoArm range ~0.0-1.5",
+    )
+    parser.add_argument(
+        "--gripper-close",
+        type=float,
+        default=1.2,
+        help="Gripper close target (rad). RoArm range ~0.0-1.5",
+    )
+    parser.add_argument(
+        "--gripper-settle-s",
+        type=float,
+        default=1.5,
+        help="Wait after each gripper command (seconds)",
+    )
+    parser.add_argument(
+        "--no-gripper",
+        action="store_true",
+        help="Skip all gripper commands (TCP motion only)",
+    )
+    parser.add_argument(
+        "--skip-gripper-open",
+        action="store_true",
+        help="Do not open gripper before approach (assume already open)",
+    )
+    parser.add_argument(
+        "--skip-lift",
+        action="store_true",
+        help="Skip retreat/lift after closing gripper",
     )
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()

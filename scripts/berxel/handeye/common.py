@@ -317,6 +317,23 @@ def call_move_joint_cmd(
     return False, message or "unknown move_joint_cmd failure"
 
 
+def call_gripper_cmd(
+    position_rad: float,
+    wsl_distro: str = "RoArm_M3",
+    timeout_s: int = 30,
+) -> tuple[bool, str]:
+    """Publish gripper target angle (rad). RoArm docs: ~0.0 open, ~1.5 closed."""
+    result = run_roarm_ros(
+        "ros2 topic pub --once /gripper_cmd std_msgs/msg/Float32 "
+        f"'{{data: {float(position_rad)}}}'",
+        wsl_distro=wsl_distro,
+        timeout_s=timeout_s,
+    )
+    if result.returncode != 0:
+        return False, result.stderr.strip() or "gripper_cmd publish failed"
+    return True, "ok"
+
+
 def go_home_pose(
     home_pose: dict[str, float],
     wsl_distro: str = "RoArm_M3",
