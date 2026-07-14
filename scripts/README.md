@@ -180,6 +180,8 @@ bash scripts/wsl/run_ee_tests.sh
 | `berxel/handeye/auto.sh` | 手眼全自动（含 joint_states 约束） | 1 | 相机 + RoArm 已启动 |
 | `berxel/handeye/auto_fast.sh` | 手眼全自动（快速，仅 pose 约束） | 1 | 相机 + RoArm 已启动 |
 | `berxel/handeye/solve.sh` | 手眼标定解算 | 1 | 已采集 hand_eye 样本 |
+| `berxel/handeye/move_to_tag.sh` | 检测 AprilTag → 移动 TCP | 1 | 外参已标定 + 相机 + RoArm |
+| `berxel/handeye/grasp_apriltag.sh` | Tag 两段式接近（悬停再下降） | 1 | 外参已标定 + 相机 + RoArm |
 
 ---
 
