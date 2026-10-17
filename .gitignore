@@ -1,5 +1,7 @@
 # Personal files
 .local/
+.poster_build/
+demos/
 
 # MOGI starter (clone locally; see src/gazebo_basics/README.md)
 src/gazebo_basics/Week-3-4-Gazebo-basics/
